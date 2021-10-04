@@ -1,4 +1,4 @@
 # MUSI-IC
 
 Repositori de l'assignatura **Intel·ligència Computacional**
-del Màster de Sistemes Intel·ligents, curs 21 22
+del Màster de Sistemes Intel·ligents (MUSI - UIB) 2021-22
