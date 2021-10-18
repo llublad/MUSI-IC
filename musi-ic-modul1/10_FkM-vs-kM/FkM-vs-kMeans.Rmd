@@ -1,0 +1,44 @@
+---
+title: "Fuzzy k-means vs k-means"
+output: html_document
+---
+
+### Opcions generals
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Carrega llibreria fclust
+
+```{r load_libs}
+library("fclust")
+```
+
+### Carrega McDonald's USA Nutrition Facts
+
+```{r load_data}
+data(Mc)
+```
+
+### Descriu *data set*
+
+```{r describe_ds}
+str(Mc)
+```
+
+### FkM estàndar
+
+```{r fkm_estandard}
+# stand = 1 : estandaritza dades (x-u)/s
+fkm <- FKM(X = Mc[,1:(ncol(Mc)-1)], 
+           k = c, 
+           m = 1.5, 
+           stand = 1, 
+           RS = 10)
+```
+
+
+
+
+
