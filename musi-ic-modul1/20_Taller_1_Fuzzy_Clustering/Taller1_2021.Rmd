@@ -1,0 +1,130 @@
+---
+title: "Taller 1 - Inteligencia Computacional - Curso 21-22"
+author: "Nazarie Cerlat, David Carretero, Lluís Bernat"
+date: "18/10/2021"
+output: html_document
+---
+
+*a)* La instrucción de R *mvrnom* permite crear una muestra de datos aleatorios que siguen una normal multivariada. Cread tres muestras aleatorias de datos a partir de normales multivariadas con medias $(0,0)$, $(20,20)$ y $(-20,-20)$ y con matriz de covarianzas $$\left(\begin{matrix} 5 & 2\\2&5 \end{matrix}\right).$$ Representad gráficamente los datos coloreando de un color distinto cada una de las muestras.  **[2 puntos]**
+
+```{r}
+library('MASS')
+```
+
+```{r}
+sigma <- matrix(c(5,2,2,5),2,2)
+m1 = mvrnorm(n=50, Sigma = sigma, mu = c(0, 0))
+m2 = mvrnorm(n=50, Sigma = sigma, mu = c(20, 20))
+m3 = mvrnorm(n=50, Sigma = sigma, mu = c(-20, -20))
+```
+
+```{r}
+plot(m1, col='green', xlim=c(-25, 25), ylim=c(-25, 25))
+points(m2, col='red')
+points(m3, col='blue')
+```
+
+*b)* Determinad el número óptimo de clústers para los datos anteriores. Justificad la respuesta. **[1.5 puntos]**
+
+```{r}
+df = rbind(m1, m2, m3)
+```
+
+
+```{r}
+library('NbClust')
+```
+
+```{r}
+resnumclust<-NbClust(df, distance = "euclidean", min.nc=2, max.nc=4, method = "kmeans", index = "alllong")
+resnumclust
+```
+
+*c)* Fijando el número de clústers óptimo, realizad un k-means clásico, representando gráficamente el resultado obtenido y calculad el valor de $SS_C$ para este resultado. A continuación, realizad las mismas tareas pero ejecutando la función un número considerable de veces para asegurar un resultado significativo. ¿Existen diferencias entre ambos resultados? ¿Coinciden los centros con las medias de las normales multivariadas escogidas? **[1.5 puntos]**
+
+```{r}
+km <- kmeans(df, centers = 3, nstart = 1)
+sum(km$withinss)
+```
+
+```{r}
+plot(df, col=km$cluster, pch=19, main="El nuestro con una sola ejecución")
+```
+
+```{r}
+km2 <- kmeans(df, centers = 3, nstart = 100)
+sum(km2$withinss)
+```
+```{r}
+plot(df, col=km2$cluster, pch=19, main="El nuestro")
+```
+```{r}
+km2
+```
+
+En esta ejecución ha habido diferencia significativa entre los dos resultados dando una SSC cercana a 20000. 
+
+En la segunda ejecución (100 iteraciones), los centros se han ubicado cerca de los originales, con un márgenes del 2%. 
+
+
+*d)* Realizad un fuzzy k-means con valor de fuzzyficador 2 y 3 clústers, ejecutando la función un número considerable de veces para asegurar un resultado significativo. Realizad lo mismo pero ahora con 4 clústers. Determinad usando un criterio cuantitativo y uno gráfico (los que queráis) qué número de clústers es mejor.     **[3 puntos]**
+
+```{r}
+library('fclust')
+```
+
+```{r}
+fkm3 <- FKM(X=df, k=3, stand = 0, m=2, RS=100)
+```
+
+```{r}
+fkm4 <- FKM(X=df, k=4, stand = 0, m=2, RS=100)
+```
+
+```{r}
+PE(fkm3$U)
+```
+
+```{r}
+PE(fkm4$U)
+```
+
+```{r}
+table(fkm3$clus[,1],fkm4$clus[,1])
+```
+
+```{r}
+VCV2(fkm3$Xca, fkm3$U, 2)
+```
+
+```{r}
+VCV2(fkm4$Xca, fkm4$U, 2)
+```
+
+La división en tres clústers es mejor, porque: 
+- Su entropia es más baja que la de la división en 4 (0.08 vs 0.20)
+- gráficamente se vé que en el clúster 3 hay una subdivisión. 
+
+
+*e)* Añadid una muestra adicional de una normal multivariada con media $(100,100)$ y misma matriz de covarianza. Realizad un fuzzy clustering con 4 clústers, ejecutando un número considerable de veces para asegurar un resultado significativo. ¿Se han movido significativamente los centros obtenidos con 3 clústers del apartado anterior con respecto a los centros obtenidos en este apartado? **[2 puntos]**
+
+```{r}
+m4 <- mvrnorm(n=50, Sigma = sigma, mu = c(100, 100))
+```
+
+```{r}
+df2 <- rbind(df, m4)
+fkm4b <- FKM(X=df2, k=4, stand = 0, m=2, RS=100)
+```
+
+```{r}
+fkm4$H
+```
+
+```{r}
+fkm4b$H
+```
+
+
+
+
