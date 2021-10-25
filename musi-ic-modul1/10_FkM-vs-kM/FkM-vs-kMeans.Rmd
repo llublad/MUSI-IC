@@ -26,19 +26,63 @@ data(Mc)
 ```{r describe_ds}
 str(Mc)
 ```
+```{r}
+X <- Mc[,1:(ncol(Mc) - 1)]
+```
+
+### k-means
+
+#### Calculam número òptim de *clusters*
+
+```{r}
+library('ggplot2')
+library('factoextra')
+```
+
+```{r}
+# Mètode del colze o "wss"
+fviz_nbclust(x = X, FUNcluster = kmeans, method = "wss")
+```
+
+```{r}
+library('NbClust')
+```
+
+```{r}
+NbClust(data = X, distance = "euclidean", min.nc=2, max.nc=8, 
+            method = "complete", index = "all")
+```
+
+```{r k-means}
+# Per executar l'algorisme explicat a classe li hem de dir "Lloyd"
+km <- kmeans(X, centers = 4, algorithm = "Lloyd")
+```
+
+```{r}
+# SSc
+
+## Fracció de la variabilitat de les dades que expliquen els clusters
+## Como més gran, millor
+
+km$betweenss / km$totss
+```
 
 ### FkM estàndar
 
 ```{r fkm_estandard}
 # stand = 1 : estandaritza dades (x-u)/s
-fkm <- FKM(X = Mc[,1:(ncol(Mc)-1)], 
-           k = c, 
+fkm <- FKM(X = Mc[,1:(ncol(Mc) - 1)], 
+           k = 6, 
            m = 1.5, 
            stand = 1, 
            RS = 10)
 ```
 
+```{r}
+VCV2(fkm$Xca, fkm$U, 2)
+```
 
-
-
+```{r}
+table(km$cluster, fkm$clus[,1])
+```
 

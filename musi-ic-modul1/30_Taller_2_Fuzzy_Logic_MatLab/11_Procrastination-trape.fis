@@ -1,0 +1,63 @@
+[System]
+Name='Procrastination-trape'
+Type='mamdani'
+Version=2.0
+NumInputs=3
+NumOutputs=1
+NumRules=15
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='Cansancio'
+Range=[0 10]
+NumMFs=3
+MF1='Bajo':'gaussmf',[2.123 0]
+MF2='Medio':'gaussmf',[2.123 5]
+MF3='Alto':'gaussmf',[2.123 10]
+
+[Input2]
+Name='Importancia'
+Range=[0 10]
+NumMFs=3
+MF1='Poca':'trimf',[-1 0 4.2]
+MF2='Media':'trimf',[0.8 5 9.2]
+MF3='Alta':'trimf',[5.8 10 11]
+
+[Input3]
+Name='Deadline'
+Range=[0 10]
+NumMFs=3
+MF1='Cercano':'trapmf',[-1 0 1 2]
+MF2='Medio':'trapmf',[1 3 7 9]
+MF3='Lejano':'trapmf',[6.64 9 10 11]
+
+[Output1]
+Name='Procrastinación'
+Range=[0 10]
+NumMFs=5
+MF1='MuyPoca':'gaussmf',[1.062 0]
+MF2='Poca':'gaussmf',[1.062 2.5]
+MF3='Medio':'gaussmf',[1.062 5]
+MF4='Bastante':'gaussmf',[1.062 7.5]
+MF5='Mucha':'gaussmf',[1.062 10]
+
+[Rules]
+-3 0 1, 1 (1) : 1
+0 3 1, 1 (1) : 1
+-3 2 1, 1 (1) : 1
+-3 1 1, 2 (1) : 1
+1 3 2, 2 (1) : 1
+2 3 2, 3 (1) : 1
+3 3 2, 4 (1) : 1
+1 2 2, 3 (1) : 1
+2 2 2, 4 (1) : 1
+3 2 2, 5 (1) : 1
+1 1 2, 4 (1) : 1
+-1 1 -1, 5 (1) : 1
+1 3 3, 3 (1) : 1
+2 3 3, 5 (1) : 1
+0 0 3, 5 (1) : 1
